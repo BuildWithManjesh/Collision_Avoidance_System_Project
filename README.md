@@ -54,27 +54,72 @@ The radar can detect a person who is **not** wearing a tag; the tag can "see" a 
 - Redundancy by design: failure of one sensor, one radio link or one node does not silence the other path
 - Rechargeable battery operation with a documented power budget
 
+
 ## System Architecture
 
-```
-                    ┌────────────────────────────────────┐
-                    │          MACHINE NODE (ESP32)      │
-                    │  C4001 radar · VL53L0X · OLED      │
-                    │  Buzzer · LED · UWB TAG (power)    │
-                    └──────┬─────────────────────▲───────┘
-        0xA5 status (10 B) │                     │ 0xA7 status (7 B)
-                           │      ESP-NOW        │
-              ┌────────────▼───────┐   ┌─────────┴─────────────┐
-              │  CAMERA NODE       │   │  WORKER NODE          │
-              │  ESP32-CAM + SD    │   │  ESP32-C3 Super Mini  │
-              │  Snapshot on alert │   │  RYUW122 UWB anchor   │
-              │  Heartbeat 1 Hz    │   │  OLED · Buzzer · LED  │
-              └────────────────────┘   │  Vibration motor      │
-                                       └───────────────────────┘
-                     UWB two-way ranging: worker anchor ⇄ machine tag
-```
+The following diagram illustrates the overall system
+architecture of the Collision Avoidance System.
 
-The camera node also sends a heartbeat (`0xA5`, type 2) back to the machine node every second, so the machine OLED can show `CAM:OK`.
+<p align="center">
+  <img src="Images/Architecture.png" width="750">
+</p>
+
+<p align="center">
+  <em>Figure 1: System Architecture</em>
+</p>
+
+### Machine Node
+
+The Machine Node monitors the surrounding environment
+and provides collision warnings.
+
+<p align="center">
+  <img src="Images/Machine_Node.jpeg" width="450">
+</p>
+
+<p align="center">
+  <em>Figure 2: Machine Node Hardware</em>
+</p>
+
+### Anchor Module
+
+The Anchor Module supports UWB-based distance
+measurement between the worker and machine.
+
+<p align="center">
+  <img src="Images/Anchor_Module.jpeg" width="650">
+</p>
+
+<p align="center">
+  <em>Figure 3: Anchor Module Circuit Diagram</em>
+</p>
+
+### Tag Module
+
+The Tag Module communicates with the Anchor Module
+for distance measurement.
+
+<p align="center">
+  <img src="Images/Tag_Module.jpeg" width="450">
+</p>
+
+<p align="center">
+  <em>Figure 4: Tag Module Circuit Diagram</em>
+</p>
+
+### Hardware Implementation of Tag Module
+
+The following image shows the physical hardware
+implementation of the Tag Module.
+
+<p align="center">
+  <img src="Images/Hardware_Tag_Module.jpeg" width="350">
+</p>
+
+<p align="center">
+  <em>Figure 5: Hardware Implementation of Tag Module</em>
+</p>
+  
 
 ### Key design decisions
 
@@ -328,13 +373,13 @@ Planned integrated field tests (observed column intentionally empty until measur
 11. Measure underground radio range; consider LoRa if insufficient
 12. Check the design against DGMS (India) and MSHA (US) requirements
 
-## Team
+## Project Supervisor
 
-**Supervisor:** Dr. Yogesh Kumar Sariya – Dept. of Electronics and Instrumentation Engineering, NIT Agartala
+Dr. Yogesh Kumar Sariya – Dept. of Electronics and Instrumentation Engineering, NIT Agartala
 
-**Team members** (B.Tech, Electronics and Instrumentation Engineering):
+**Branch** (B.Tech, Electronics and Instrumentation Engineering):
 
-- Manjesh Kumar
+ **Project Contributor** Manjesh Kumar
 
 
 **Acknowledgements:** Faculty In-charge TEXMiN Dr. Rajib Saha (Civil Engineering) and CIC Ms. Sushmita Roy, NIT Agartala; and the open-source community and manufacturers (DFRobot, STMicroelectronics, Espressif, Reyax, U8g2 and Adafruit developers).
